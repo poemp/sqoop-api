@@ -1,5 +1,8 @@
 package org.poem;
 
+/**
+ * @author poem
+ */
 public class CommandEnum {
 
     /**
@@ -39,5 +42,5 @@ public class CommandEnum {
     public static final String SQOOP_IMPORT_DATA = SQOOP_HOME + "/bin/sqoop  import --connect @url --username @user --password '@password' " +
             "  --table  @table -m 1  --hive-database @scheme  --hive-import --hive-overwrite --create-hive-table --hive-table  @table";
 
-    public static final String SQOOP_IMPORT_DATA_CHECK = HIVE_HOME + "/bin/hive -e 'use @database; select 1 from  @table'";
+    public static final String SQOOP_IMPORT_DATA_CHECK = HIVE_HOME + "/bin/hive -e 'use @scheme; select 1 from  @table'";
 }

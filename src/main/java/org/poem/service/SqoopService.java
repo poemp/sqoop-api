@@ -3,6 +3,9 @@ package org.poem.service;
 import org.poem.entity.ExecutResult;
 import org.poem.exception.SqoopSessionException;
 
+/**
+ * @author poem
+ */
 public interface SqoopService {
 
     /**

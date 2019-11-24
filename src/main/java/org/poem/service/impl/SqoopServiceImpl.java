@@ -2,7 +2,6 @@ package org.poem.service.impl;
 
 import org.poem.CommandEnum;
 import org.poem.entity.ExecutResult;
-import org.poem.exception.SqoopSessionException;
 import org.poem.service.SqoopService;
 import org.poem.utils.RemoteServerHandler;
 import org.slf4j.Logger;
@@ -10,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 执行操作
+ *
+ * @author poem
  */
 public class SqoopServiceImpl implements SqoopService {
 
@@ -48,7 +49,7 @@ public class SqoopServiceImpl implements SqoopService {
      */
     @Override
     public ExecutResult createHiveDatabase(String database) {
-        logger.info("createHiveDatabase -- ");
+        logger.info("createHiveDatabase -- [database]:" + database);
         String command = CommandEnum.HIVE_CREATE_DATABASE.replaceAll("@database", database);
         return RemoteServerHandler.exec(command, host, password, userName, port);
     }
@@ -62,7 +63,7 @@ public class SqoopServiceImpl implements SqoopService {
      */
     @Override
     public ExecutResult deleteHiveTable(String schema, String table) {
-        logger.info("deleteHiveTable -- ");
+        logger.info("deleteHiveTable -- [schema]:" + schema + " [tale]:" + table);
         String command = CommandEnum.HIVE_DELETE_TABLE.replaceAll("@database", schema).replaceAll("@table", table);
         return RemoteServerHandler.exec(command, host, password, userName, port);
     }
@@ -75,7 +76,7 @@ public class SqoopServiceImpl implements SqoopService {
      */
     @Override
     public ExecutResult deleteHadoop(String table) {
-        logger.info("deleteHadoop -- ");
+        logger.info("deleteHadoop -- [table]:" + table);
         String command = CommandEnum.HADOOP_DELETE_FILE.replaceAll("@table", table);
         return RemoteServerHandler.exec(command, host, password, userName, port);
     }
@@ -90,7 +91,7 @@ public class SqoopServiceImpl implements SqoopService {
      */
     @Override
     public ExecutResult sqoopImportUrl(String mysqlUrl, String mysqlUser, String mysqlPasswd, String table, String scheme) {
-        logger.info("sqoopImportUrl -- ");
+        logger.info("sqoopImportUrl -- [mysqlUrl]:" + mysqlUrl + " [mysqlUser]:" + mysqlUser + " [mysqlPasswd]:" + mysqlPasswd + " [table]:" + table + " [scheme]:" + scheme);
         String command = CommandEnum.SQOOP_IMPORT_DATA
                 .replaceAll("@url", mysqlUrl)
                 .replaceAll("@user", mysqlUser)
@@ -101,8 +102,9 @@ public class SqoopServiceImpl implements SqoopService {
                 .replaceAll("@table", table)
                 .replaceAll("@scheme", scheme);
         ExecutResult result = RemoteServerHandler.exec(command, host, password, userName, port);
-        if (result.getSuccess()){
-            return RemoteServerHandler.exec(check, host, password, userName, port);
+        if (result.getSuccess()) {
+            ExecutResult select = RemoteServerHandler.exec(check, host, password, userName, port);
+            return select.getSuccess() ? result: select;
         }
         return result;
     }
@@ -118,7 +120,7 @@ public class SqoopServiceImpl implements SqoopService {
      */
     @Override
     public ExecutResult sqoopImportIp(String ip, String mysqlUser, String mysqlPasswd, Integer mysqlPort, String table, String scheme) {
-        logger.info("sqoopImportIp -- ");
+        logger.info("sqoopImportIp -- [ip]:" + ip + " [mysqlUser]:" + mysqlUser + " [mysqlPasswd]:" + mysqlPasswd + " [table]:" + table + " [scheme]:" + scheme);
         return sqoopImportUrl("jdbc:mysql://" + ip + ":" + mysqlPort + "/" + scheme + "?characterEncoding=UTF-8", mysqlUser, mysqlPasswd, table, scheme);
     }
 
@@ -132,7 +134,7 @@ public class SqoopServiceImpl implements SqoopService {
      */
     @Override
     public ExecutResult sqoopImportIp(String ip, String mysqlUser, String mysqlPasswd, String table, String scheme) {
-        logger.info("sqoopImportIp -- ");
+        logger.info("sqoopImportIp --  [ip]:" + ip + " [mysqlUser]:" + mysqlUser + " [mysqlPasswd]:" + mysqlPasswd + " [table]:" + table + " [scheme]:" + scheme);
         return sqoopImportUrl("jdbc:mysql://" + ip + ":3306/" + scheme + "?characterEncoding=UTF-8", mysqlUser, mysqlPasswd, table, scheme);
     }
 

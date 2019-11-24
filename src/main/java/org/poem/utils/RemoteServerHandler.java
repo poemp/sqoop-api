@@ -1,5 +1,6 @@
 package org.poem.utils;
 
+import ch.ethz.ssh2.ChannelCondition;
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
@@ -15,10 +16,15 @@ import java.io.InputStreamReader;
 
 /**
  * 远程调用方式去执行操作
+ *
+ * @author poem
  */
 public class RemoteServerHandler {
 
-
+    /**
+     * 超时时间
+     */
+    private static final int TIME_OUT = 1000 * 5 * 60;
     /**
      * 日志
      */
@@ -46,8 +52,7 @@ public class RemoteServerHandler {
      * @return 验证结果
      */
     public static ExecutResult exec(String cmd, String host, String password, String userName, Integer port) {
-        logger.info(String.format("host: %s, password :%s, userName : %s, port :%d", host, password, userName, port));
-        logger.info("Execute Shell Command:" + cmd);
+        logger.info(String.format("cmd: %s, host: %s, password :%s, userName : %s, port :%d", cmd, host, password, userName, port));
         ExecutResult executResult = validatePar(cmd, host, password, userName, port);
         if (executResult != null) {
             return executResult;
@@ -108,12 +113,15 @@ public class RemoteServerHandler {
             /* Authenticate */
             boolean isAuthenticated = conn.authenticateWithPassword(userName,
                     password);
-            if (!isAuthenticated)
+            if (!isAuthenticated) {
                 throw new IOException("Authentication failed.");
+            }
             /* Create a session */
             sess = conn.openSession();
             sess.execCommand(cmd);
             stderr = new StreamGobbler(sess.getStderr());
+            stdout = new StreamGobbler(sess.getStdout());
+            sess.waitForCondition(ChannelCondition.EXIT_STATUS, TIME_OUT);
             BufferedReader brerr = new BufferedReader(new InputStreamReader(stderr));
             Thread.sleep(500);
             while (true) {
@@ -123,7 +131,6 @@ public class RemoteServerHandler {
                 error.append(line);
             }
 
-            stdout = new StreamGobbler(sess.getStdout());
             BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
             while (true) {
                 String line = br.readLine();
@@ -131,7 +138,7 @@ public class RemoteServerHandler {
                     break;
                 std.append(line);
             }
-            logger.info("ExitCode: " + sess.getExitStatus());
+            logger.info("Command ExitCode: " + sess.getExitStatus());
             executResult.setSuccess(sess.getExitStatus() == 0);
             executResult.setErrorResult(error.toString());
             executResult.setErrorResult(std.toString());

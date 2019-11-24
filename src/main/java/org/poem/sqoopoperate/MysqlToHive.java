@@ -14,6 +14,9 @@ import org.apache.sqoop.submission.counter.Counters;
 import org.apache.sqoop.validation.Status;
 
 
+/**
+ * @author poem
+ */
 public class MysqlToHive {
     public static void main(String[] args) {
         sqoopTransfer();

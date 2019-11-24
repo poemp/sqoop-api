@@ -2,6 +2,7 @@ package org.poem.exception;
 
 /**
  * SqoopSessionException
+ * @author poem
  */
 public class SqoopSessionException extends Exception {
 
