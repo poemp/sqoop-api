@@ -16,6 +16,12 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <ssh2.version>build210</ssh2.version>
+        <jsch.version>jsch</jsch.version>
+        <maven.test.skip>true</maven.test.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <lombok.version>1.18.8</lombok.version>
+        <commons-lang3.version>3.8.1</commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -40,6 +46,26 @@
             <groupId>org.apache.sqoop</groupId>
             <artifactId>sqoop-client</artifactId>
             <version>1.99.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.54</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>${ssh2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
     </dependencies>
 
