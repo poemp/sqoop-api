@@ -4,10 +4,8 @@ import org.poem.entity.ExecutResult;
 import org.poem.exception.SqoopSessionException;
 import org.poem.service.SqoopService;
 import org.poem.service.impl.SqoopServiceImpl;
-import org.poem.utils.RemoteServerHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -26,8 +24,7 @@ public class SqoopApiApplication {
         Integer port = 32201;
         String schame = "employee_service";
         String table = "admin_organization";
-        RemoteServerHandler handler = new RemoteServerHandler(host, password, userName, port);
-        SqoopService sqoopService = new SqoopServiceImpl(handler);
+        SqoopService sqoopService = new SqoopServiceImpl(host, password, userName, port);
         ExecutResult executResult;
         try {
             executResult = sqoopService.createHiveDatabase(schame);
@@ -48,8 +45,6 @@ public class SqoopApiApplication {
             }
         } catch (SqoopSessionException e) {
             e.printStackTrace();
-        }finally {
-            handler.close();
         }
     }
 

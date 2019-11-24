@@ -26,7 +26,7 @@ public class CommandEnum {
     /**
      * hive 删除表
      */
-    public static final String HIVE_DELETE_TABLE = HIVE_HOME + "/bin/hive -e 'user @database; drop table @table'";
+    public static final String HIVE_DELETE_TABLE = HIVE_HOME + "/bin/hive -e 'use @database; drop table @table'";
 
     /**
      * 删除 hadoop  hdfs 表文件
@@ -37,5 +37,7 @@ public class CommandEnum {
      * sqoop 导入数据到hvie
      */
     public static final String SQOOP_IMPORT_DATA = SQOOP_HOME + "/bin/sqoop  import --connect @url --username @user --password '@password' " +
-            "       --table  @table -m 1  --hive-database @scheme  --hive-import --hive-overwrite --create-hive-table --hive-table  @table";
+            "  --table  @table -m 1  --hive-database @scheme  --hive-import --hive-overwrite --create-hive-table --hive-table  @table";
+
+    public static final String SQOOP_IMPORT_DATA_CHECK = HIVE_HOME + "/bin/hive -e 'use @database; select 1 from  @table'";
 }

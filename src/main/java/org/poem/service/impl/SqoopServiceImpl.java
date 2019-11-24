@@ -14,14 +14,30 @@ import org.slf4j.LoggerFactory;
 public class SqoopServiceImpl implements SqoopService {
 
     private static final Logger logger = LoggerFactory.getLogger(SqoopServiceImpl.class);
+
     /**
-     * 执行结果
+     * 服务器id
      */
-    private RemoteServerHandler remoteServerHandler;
+    private String host;
+    /**
+     * 服务器登录密码
+     */
+    private String password;
+    /**
+     * 服务器登录用户名
+     */
+    private String userName;
+    /**
+     * 服务器登录端口
+     */
+    private Integer port;
 
 
-    public SqoopServiceImpl(RemoteServerHandler remoteServerHandler) {
-        this.remoteServerHandler = remoteServerHandler;
+    public SqoopServiceImpl(String host, String password, String userName, Integer port) {
+        this.host = host;
+        this.password = password;
+        this.userName = userName;
+        this.port = port;
     }
 
     /**
@@ -34,12 +50,7 @@ public class SqoopServiceImpl implements SqoopService {
     public ExecutResult createHiveDatabase(String database) {
         logger.info("createHiveDatabase -- ");
         String command = CommandEnum.HIVE_CREATE_DATABASE.replaceAll("@database", database);
-        try {
-            return remoteServerHandler.exec(command);
-        } catch (SqoopSessionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return RemoteServerHandler.exec(command, host, password, userName, port);
     }
 
     /**
@@ -53,12 +64,7 @@ public class SqoopServiceImpl implements SqoopService {
     public ExecutResult deleteHiveTable(String schema, String table) {
         logger.info("deleteHiveTable -- ");
         String command = CommandEnum.HIVE_DELETE_TABLE.replaceAll("@database", schema).replaceAll("@table", table);
-        try {
-            return remoteServerHandler.exec(command);
-        } catch (SqoopSessionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return RemoteServerHandler.exec(command, host, password, userName, port);
     }
 
     /**
@@ -71,12 +77,7 @@ public class SqoopServiceImpl implements SqoopService {
     public ExecutResult deleteHadoop(String table) {
         logger.info("deleteHadoop -- ");
         String command = CommandEnum.HADOOP_DELETE_FILE.replaceAll("@table", table);
-        try {
-            return remoteServerHandler.exec(command);
-        } catch (SqoopSessionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return RemoteServerHandler.exec(command, host, password, userName, port);
     }
 
     /**
@@ -96,13 +97,14 @@ public class SqoopServiceImpl implements SqoopService {
                 .replaceAll("@password", mysqlPasswd)
                 .replaceAll("@table", table)
                 .replaceAll("@scheme", scheme);
-
-        try {
-            return remoteServerHandler.exec(command);
-        } catch (SqoopSessionException e) {
-            e.printStackTrace();
+        String check = CommandEnum.SQOOP_IMPORT_DATA_CHECK
+                .replaceAll("@table", table)
+                .replaceAll("@scheme", scheme);
+        ExecutResult result = RemoteServerHandler.exec(command, host, password, userName, port);
+        if (result.getSuccess()){
+            return RemoteServerHandler.exec(check, host, password, userName, port);
         }
-        return null;
+        return result;
     }
 
     /**
