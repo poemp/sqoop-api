@@ -42,6 +42,29 @@ public class InitDatabaseTables {
             add(new DataBases("shop_pay_service", new ArrayList<Table>() {{
                 add(new Table("order_item"));
             }}));
+            //职工打车
+            add(new DataBases("shenma", new ArrayList<Table>() {{
+                add(new Table("t_order_info"));
+                add(new Table("t_order_status_record"));
+            }}));
+            //职工商旅
+            add(new DataBases("airticket_service", new ArrayList<Table>() {{
+                add(new Table("airticket_bookingrequest"));
+                add(new Table("airticket_ticketingorderstatus"));
+            }}));
+            //摩拜
+            add(new DataBases("convenient_service", new ArrayList<Table>() {{
+                add(new Table("mobike_order"));
+            }}));
+            //职工观影
+            add(new DataBases("taopiaopiao", new ArrayList<Table>() {{
+                add(new Table("t_city"));
+                add(new Table("t_order"));
+                add(new Table("t_region"));
+                add(new Table("t_schedules"));
+                add(new Table("t_shows"));
+            }}));
+            //职工订餐
         }};
     }
 }
