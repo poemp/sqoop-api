@@ -49,7 +49,7 @@ public class InitDatabaseTables {
             }}));
             //职工商旅
             add(new DataBases("airticket_service", new ArrayList<Table>() {{
-                add(new Table("airticket_bookingrequest"));
+                add(new Table("airticket_bookingrequestflight"));
                 add(new Table("airticket_ticketingorderstatus"));
             }}));
             //摩拜
@@ -65,6 +65,10 @@ public class InitDatabaseTables {
                 add(new Table("t_shows"));
             }}));
             //职工订餐
+            add(new DataBases("dinner", new ArrayList<Table>() {{
+                add(new Table("t_order_status"));
+                add(new Table("t_order_meal"));
+            }}));
         }};
     }
 }

@@ -24,7 +24,7 @@ public class RemoteServerHandler {
     /**
      * 超时时间
      */
-    private static final int TIME_OUT = 1000 * 5 * 60;
+    private static final int TIME_OUT = 1000 * 60 * 60;
     /**
      * 日志
      */
@@ -140,6 +140,9 @@ public class RemoteServerHandler {
             }
             logger.info("Command ExitCode: " + sess.getExitStatus());
             executResult.setSuccess(sess.getExitStatus() == 0);
+            if (sess.getExitStatus() != 0) {
+                logger.error("[error]:" + error);
+            }
             executResult.setErrorResult(error.toString());
             executResult.setErrorResult(std.toString());
         } catch (Exception e) {
