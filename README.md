@@ -12,3 +12,45 @@ vi /etc/ssh/sshd_config
 
 service sshd restart
 ``````````````
+
+到Sqoop配置文件中$SQOOP_HOME/bin/configure-sqoop，注释掉Accumulo检查
+
+``````````````
+#if [ ! -d "${ACCUMULO_HOME}" ]; then
+#  echo "Warning: $ACCUMULO_HOME does not exist! Accumulo imports will fail."
+#  echo 'Please set $ACCUMULO_HOME to the root of your Accumulo installation.'
+#fi
+``````````````
+在$SQOOP_HOME/bin目录下面修改configure-sqoop文件，注释掉以下内容
+``````````````
+#if [ -z "${HCAT_HOME}" ]; then
+#  if [ -d "/usr/lib/hive-hcatalog" ]; then
+#    HCAT_HOME=/usr/lib/hive-hcatalog
+#  elif [ -d "/usr/lib/hcatalog" ]; then
+#    HCAT_HOME=/usr/lib/hcatalog
+#  else
+#    HCAT_HOME=${SQOOP_HOME}/../hive-hcatalog
+#    if [ ! -d ${HCAT_HOME} ]; then
+#       HCAT_HOME=${SQOOP_HOME}/../hcatalog
+#    fi
+#  fi
+#fi
+#if [ -z "${ACCUMULO_HOME}" ]; then
+#  if [ -d "/usr/lib/accumulo" ]; then
+#    ACCUMULO_HOME=/usr/lib/accumulo
+#  else
+#    ACCUMULO_HOME=${SQOOP_HOME}/../accumulo
+#  fi
+#fi
+
+## Moved to be a runtime check in sqoop.
+#if [ ! -d "${HCAT_HOME}" ]; then
+#  echo "Warning: $HCAT_HOME does not exist! HCatalog jobs will fail."
+#  echo 'Please set $HCAT_HOME to the root of your HCatalog installation.'
+#fi
+
+#if [ ! -d "${ACCUMULO_HOME}" ]; then
+#  echo "Warning: $ACCUMULO_HOME does not exist! Accumulo imports will fail."
+#  echo 'Please set $ACCUMULO_HOME to the root of your Accumulo installation.'
+#fi
+``````````````
